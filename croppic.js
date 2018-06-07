@@ -48,6 +48,7 @@
 			onBeforeRemoveCroppedImg: null,
 			onAfterRemoveCroppedImg: null,
 			onError: null,
+			onAfterInit: null,
 			
 		};
 
@@ -104,7 +105,6 @@
 			if( $.isEmptyObject(that.defaultImg)){ that.defaultImg = that.obj.find('img'); }
 			
 			that.createImgUploadControls();
-			
 			if( $.isEmptyObject(that.options.loadPicture)){				
 				that.bindImgUploadControl();
 			}else{				
@@ -135,12 +135,11 @@
 			}
 			
 		},
-		bindImgUploadControl: function(){
-			
+		bindImgUploadControl: function() {
 			var that = this;
 			
 			// CREATE UPLOAD IMG FORM
-            var formHtml = '<form class="' + that.id + '_imgUploadForm" style="visibility: hidden;">  <input type="file" name="img" id="' + that.id + '_imgUploadField">  </form>';
+            var formHtml = '<form class="' + that.id + '_imgUploadForm" style="visibility: hidden;">  <input type="file" name="img" id="' + that.id + '_imgUploadField" readonly>  </form>';
 			that.outputDiv.append(formHtml);
 			that.form = that.outputDiv.find('.'+that.id+'_imgUploadForm');
 			
@@ -255,7 +254,7 @@
         },
 		loadExistingImage: function(){
 			var that = this;
-			
+
 			if( $.isEmptyObject(that.croppedImg)){
 				if (that.options.onBeforeImgUpload) that.options.onBeforeImgUpload.call(that);
 			
@@ -264,18 +263,18 @@
 				if( !$.isEmptyObject(that.croppedImg)){ that.croppedImg.remove(); }
 				
 				that.imgUrl=that.options.loadPicture ;
-				
+
 				var img =$('<img src="'+ that.options.loadPicture +'">');
 				that.obj.append(img);
-				img.load(function() {
+				img.on('load', function() {
 					that.imgInitW = that.imgW = this.width;
 					that.imgInitH = that.imgH = this.height;
 					that.initCropper();
 					that.hideLoader();
 					if (that.options.onAfterImgUpload) that.options.onAfterImgUpload.call(that);
-				});	
-						
-			}else{					
+				});
+
+			} else {
 				that.cropControlRemoveCroppedImage.on('click',function(){ 
 					that.croppedImg.remove();
 					$(this).hide();
@@ -295,7 +294,6 @@
 
            	response = typeof data =='object' ? data : jQuery.parseJSON(data);
 
-            
             if (response.status == 'success') {
 
                 that.imgInitW = that.imgW = response.width;
@@ -310,7 +308,7 @@
 
 				that.obj.append(img);
 
-				img.load(function(){
+				img.on('load', function(){
 					that.initCropper();
 					that.hideLoader();
 					if (that.options.onAfterImgUpload) that.options.onAfterImgUpload.call(that);
@@ -361,6 +359,10 @@
 			if(that.options.imgEyecandy){ that.createEyecandy(); }
 			that.initDrag();
 			that.initialScaleImg();
+
+			if (typeof (that.options.onAfterInit) === typeof(Function)) {
+				that.options.onAfterInit();
+			}
 		},
 		createEyecandy: function(){
 			var that = this;
@@ -401,7 +403,7 @@
 			var cropControlZoomMuchOut =     '';
 			var cropControlRotateLeft =      '';
 	        var cropControlRotateRight =     '';
-	        var cropControlCrop =            '<i class="cropControlCrop"></i>';
+	        var cropControlCrop =            ''; //<i class="cropControlCrop"></i>
 			var cropControlReset =           '<i class="cropControlReset"></i>';
 			
             var html;
@@ -684,7 +686,7 @@
 
 				});
 			}
-						
+
 			//
         },
 		afterCrop: function (data) {
