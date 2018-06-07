@@ -1,6 +1,6 @@
 {
   "name": "croppic",
-  "version": "0.5",
+  "version": "1.0.0",
   "description": "fork of https://github.com/sconsult/croppic fixed for jquery 3",
   "main": "croppic.js",
   "scripts": {},
