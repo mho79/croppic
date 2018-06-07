@@ -1,0 +1,9 @@
+{
+  "name": "croppic",
+  "version": "1",
+  "description": "fork of https://github.com/sconsult/croppic fixed for jquery 3",
+  "main": "jquery.flot.js",
+  "scripts": {},
+  "devDependencies": {},
+  "author": "Mat Steinlin https://github.com/sconsult), updates bt Mirko Höch"
+}
